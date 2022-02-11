@@ -7,11 +7,13 @@ export async function getProductsById(req, res) {
   const products = [];
 
   try {
-  idsArr.map(async(id) => {
-    console.log('to aqui')
+  const promises = idsArr.map(async(id) => {
     const product = await db.collection('products').find().toArray()
+    products.push(product)
   })
-  console.log()
+
+  await Promise.all(promises)
+  console.log(products)
   res.send(products)
   
 

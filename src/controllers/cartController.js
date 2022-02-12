@@ -8,8 +8,8 @@ export async function getProductsById(req, res) {
 
   try {
   const promises = idsArr.map(async(id) => {
-    const product = await db.collection('products').find().toArray()
-    products.push(product)
+    const product = await db.collection('products').find({_id : new ObjectId(id)}).toArray()
+    products.push(product[0])
   })
 
   await Promise.all(promises)

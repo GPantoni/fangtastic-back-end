@@ -32,7 +32,13 @@ export async function addFormOfPayment(req, res) {
       const user = await db
         .collection('users')
         .findOne({ _id: userId })
-      await db.collection(`${user.email}/FoP`).insertOne(data);
+      if(data.type === 'credit') {
+        hashSecurityCode = bcrypt.hashSync(data.securityCode, 10)
+        await db.collection(`${user.email}/FoP`).insertOne({...data, hashSecurityCode });
+
+      }else {
+        await db.collection(`${user.email}/FoP`).insertOne(data);
+      }
       res.sendStatus(201)
 
     }

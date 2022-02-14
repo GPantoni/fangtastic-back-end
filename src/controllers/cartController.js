@@ -24,8 +24,6 @@ export async function getProductsById(req, res) {
 
 export async function getCart(req, res) {
   try {
-    //cart is found either through local storage or by logged in user
-    //if cart is in local storage, no requisition is made to the api
     if (req.user) {
       const user = await db
         .collection('user')

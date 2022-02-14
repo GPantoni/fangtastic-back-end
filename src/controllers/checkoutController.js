@@ -33,6 +33,8 @@ export async function addFormOfPayment(req, res) {
         .collection('users')
         .findOne({ _id: userId })
       await db.collection(`${user.email}/FoP`).insertOne(data);
+      res.sendStatus(201)
+
     }
   } catch (err) {
     console.log(err);
@@ -42,6 +44,24 @@ export async function addFormOfPayment(req, res) {
 export async function removeFormOfPayment(req, res) {}
 
 export async function sendOrder(req, res) {
-  const order = req.body;
-  const user = req.headers.user;
+  try {
+    const order = req.body;
+
+    const token = req.headers.token;
+
+    const session = await db.collection('sessions').findOne({ token });
+    if (!session) {
+      return res.sendStatus(401);
+    } else {
+      const userId = session.userId;
+
+      const user = await db
+        .collection('users')
+        .findOne({ _id: userId })
+      await db.collection(`${user.email}/orders`).insertOne(order);
+      res.sendStatus(201)
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }
